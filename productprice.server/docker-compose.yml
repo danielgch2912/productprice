@@ -1,0 +1,8 @@
+version: '3.3'
+services:
+  sprestweb:
+    container_name: productpriceserver
+    image: latest/productpriceserver
+    build: .
+    ports:
+      - '8081:80'
