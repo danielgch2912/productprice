@@ -1,13 +1,12 @@
-package awsjava.click.productprice.server.controller;
+package click.awsjava.productprice.server.controller;
 
-import awsjava.click.productprice.server.entity.Product;
+import click.awsjava.productprice.server.entity.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/product")

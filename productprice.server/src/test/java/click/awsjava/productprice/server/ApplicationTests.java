@@ -1,4 +1,4 @@
-package awsjava.click.productprice.server;
+package click.awsjava.productprice.server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

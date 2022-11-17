@@ -1,4 +1,4 @@
-package awsjava.click.productprice.server.entity;
+package click.awsjava.productprice.server.entity;
 
 import lombok.Data;
 
