@@ -1,0 +1,69 @@
+
+Resources:
+
+  ProductServerSecurityRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 's3:GetObject'
+                Resource: 'arn:aws:s3:::productprice.awsjava.click/*'
+
+  ProductServerSecurityInstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref ProductServerSecurityRole
+
+  ProductServerSecurityGroupSSH :
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+
+  ProductServerSecurityGroupHTTP :
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable http access via port 80
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+
+  ProductServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0b0dcb5067f052a63
+      InstanceType: t3.nano
+      KeyName: investindodotnet-2022
+      SecurityGroupIds:
+        - !Ref ProductServerSecurityGroupSSH
+        - !Ref ProductServerSecurityGroupHTTP
+      IamInstanceProfile: !Ref ProductServerSecurityInstanceProfile
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash
+            aws s3api get-object --bucket productprice.awsjava.click --key productprice-server.jar productprice-server.jar
+            yum install java-17-amazon-corretto-headless -y
+            java -Dserver.port=80 -jar productprice-server.jar 
